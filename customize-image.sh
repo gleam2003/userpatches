@@ -43,6 +43,8 @@ _EOF_
 
 	cp -r /tmp/overlay/etc/ /
 
+	dpkg -i /tmp/overlay/rk3399/sdl2/libsdl2-2.0-0_2.0.10+5_arm64.deb  /tmp/overla/rk3399/sdl2/libsdl2-dev_2.0.10+5_arm64.deb
+
 	#su -c "sudo -S __platform=rk3399 __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh retroarch" - pi
 	#su -c "sudo -S __platform=rk3399 __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh emulationstation-dev" - pi
 
