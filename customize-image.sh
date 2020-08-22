@@ -31,7 +31,8 @@ Main() {
 	tar -xhzvf /tmp/overlay/h3/mali.tar.gz -C /
 	tar -xhzvf /tmp/overlay/retropie.tar.gz -C /
 	cp -r /tmp/overlay/etc/ /
-
+	
+	ldconfig
 	#git clone https://github.com/gleam2003/RetroPie-Setup /home/pi/RetroPie-Setup
 
 	su -c "sudo -S __platform=rk3399 __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh setup basic_install" - pi
