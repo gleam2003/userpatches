@@ -15,29 +15,68 @@ RELEASE=$1
 LINUXFAMILY=$2
 BOARD=$3
 BUILD_DESKTOP=$4
+BOARDFAMILY=$5
 
 Main() {
+	export LANG=C LC_ALL="en_US.UTF-8"
+	export DEBIAN_FRONTEND=noninteractive
+	export APT_LISTCHANGES_FRONTEND=none
 
-	rm -f /etc/systemd/system/getty@.service.d/override.conf
-	rm -f /etc/systemd/system/serial-getty@.service.d/override.conf
-	systemctl daemon-reload
-
-	echo root:abiuplayer | chpasswd
+	mount --bind /dev/null /proc/mdstat
 
 	rm /root/.not_logged_in_yet
+
+	echo root:abiuplayer | chpasswd
 	adduser pi --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 	echo pi:retroera | chpasswd
 
-	tar -xhzvf /tmp/overlay/h3/mali.tar.gz -C /
-	tar -xhzvf /tmp/overlay/retropie.tar.gz -C /
+	rm -f /etc/systemd/system/getty@.service.d/override.conf
+	rm -f /etc/systemd/system/serial-getty@.service.d/override.conf
+
 	cp -r /tmp/overlay/etc/ /
-	
-	ldconfig
-	#git clone https://github.com/gleam2003/RetroPie-Setup /home/pi/RetroPie-Setup
 
-	su -c "sudo -S __platform=rk3399 __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh setup basic_install" - pi
-	su -c "sudo -S __platform=rk3399 __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh autostart enable" - pi
+	modules=(
+	    'retroarch'
+	    'emulationstation'
+	    'retropiemenu'
+	    'runcommand'
+	    'autostart enable'
+	    'usbromservice'
+	    'samba depends'
+	    'samba install_shares'
+	    'xpad'
+	)
 
+#	case $BOARD in
+#		"orangepi4"|"RockPro 64"|"Firefly RK3399"|"NanoPC T4"|"NanoPi M4V2"|"NanoPi M4"|"NanoPi Neo 4"|"Orange Pi RK3399"|"Pinebook Pro"|"Rockpi 4A"|"Rockpi 4B" )
+#			tar -xhzvf /tmp/overlay/rk3399/mali.tar.gz -C /
+#			platform = "rk3399"
+#			modules += (
+#				'lr-flycast'
+#				'reicast')
+#			;;
+#	esac
+
+	case $BOARDFAMILY in
+		"rk3399" )
+			tar -xhzvf /tmp/overlay/rk3399/mali.tar.gz -C /
+			platform = "rk3399"
+#			modules += (
+#				'lr-flycast'
+#				'reicast')
+			;;
+	esac
+
+	git clone https://github.com/gleam2003/RetroPie-Setup /home/pi/RetroPie-Setup
+
+	for module in "${modules[@]}"; do
+	    su -c "sudo -S __platform=${BOARDFAMILY} __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh ${module}" - pi
+	done
+
+	rm -rf /home/pi/RetroPie-Setup/tmp
+	sudo apt-get clean
+
+	umount /proc/mdstat
 } # Main
 
 Main "$@"
