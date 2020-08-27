@@ -15,42 +15,71 @@ RELEASE=$1
 LINUXFAMILY=$2
 BOARD=$3
 BUILD_DESKTOP=$4
+BOARDFAMILY=$5
 
 Main() {
+	export LANG=C LC_ALL="en_US.UTF-8"
+	export DEBIAN_FRONTEND=noninteractive
+	export APT_LISTCHANGES_FRONTEND=none
+
+	mount --bind /dev/null /proc/mdstat
+
+	rm /root/.not_logged_in_yet
+
+	echo root:abiuplayer | chpasswd
+	adduser pi --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+	echo pi:retroera | chpasswd
 
 	rm -f /etc/systemd/system/getty@.service.d/override.conf
 	rm -f /etc/systemd/system/serial-getty@.service.d/override.conf
-	systemctl daemon-reload
-
-	echo root:abiuplayer | chpasswd
-
-	rm /root/.not_logged_in_yet
-	adduser pi --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
-	echo pi:raspberry | chpasswd
-
-	mkdir -p /etc/systemd/system/getty@tty1.service.d/
-    cat >/etc/systemd/system/getty@tty1.service.d/autologin.conf <<_EOF_
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin pi --noclear %I \$TERM
-_EOF_
-
-	git clone https://github.com/gleam2003/RetroPie-Setup /home/pi/RetroPie-Setup
-	chown pi /home/pi/RetroPie-Setup -R
-
-	tar -xhzvf /tmp/overlay/include.tar.gz -C /
-	tar -xhzvf /tmp/overlay/maliuserpsace.tar.gz -C /
 
 	cp -r /tmp/overlay/etc/ /
 
-	dpkg -i /tmp/overlay/rk3399/sdl2/libsdl2-2.0-0_2.0.10+5_arm64.deb  /tmp/overla/rk3399/sdl2/libsdl2-dev_2.0.10+5_arm64.deb
+#	modules=(
+#    	'setup basic_install'
+#	    'autostart enable'
+#	    'usbromservice'
+#	    'samba depends'
+#	    'samba install_shares'
+#	    'xpad'
+#	    'lr-flycast'
+#		'reicast'
+#		'lr-beetle-psx'
+#	)
 
-	#su -c "sudo -S __platform=rk3399 __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh retroarch" - pi
-	#su -c "sudo -S __platform=rk3399 __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh emulationstation-dev" - pi
+	modules=(
+    	'setup basic_install'
+	    'autostart enable'
+	    'usbromservice'
+	    'samba depends'
+	    'samba install_shares'
+	    'xpad'
+	    'lr-flycast'
+		'reicast'
+		'lr-beetle-psx'
+	)
 
-	echo abiuplayer | sudo -S su -l pi -c '__platform=rk3399 __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh retroarch'
-	echo abiuplayer | sudo -S su -l pi -c '__platform=rk3399 __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh emulationstation'
+	case $BOARDFAMILY in
+		"rk3399" )
+			tar -xhzvf /tmp/overlay/rk3399/mali.tar.gz -C /
+			platform = "rk3399"
+			;;
+		"armv7-mali" )
+			tar -xhzvf /tmp/overlay/h3/mali.tar.gz -C /
+			platform = "sun8i"
+			;;
+	esac
 
+	git clone https://github.com/gleam2003/RetroPie-Setup /home/pi/RetroPie-Setup
+
+	for module in "${modules[@]}"; do
+	    su -c "sudo -S __platform=${BOARDFAMILY} __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh ${module}" - pi
+	done
+
+	rm -rf /home/pi/RetroPie-Setup/tmp
+	sudo apt-get clean
+
+	umount /proc/mdstat
 } # Main
 
 Main "$@"
