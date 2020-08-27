@@ -35,38 +35,35 @@ Main() {
 
 	cp -r /tmp/overlay/etc/ /
 
-#	modules=(
-#    	'setup basic_install'
-#	    'autostart enable'
-#	    'usbromservice'
-#	    'samba depends'
-#	    'samba install_shares'
-#	    'xpad'
-#	    'lr-flycast'
-#		'reicast'
-#		'lr-beetle-psx'
-#	)
-
 	modules=(
-    	'setup basic_install'
+	    'retroarch'
+	    'emulationstation'
+	    'retropiemenu'
+	    'runcommand'
 	    'autostart enable'
 	    'usbromservice'
 	    'samba depends'
 	    'samba install_shares'
 	    'xpad'
-	    'lr-flycast'
-		'reicast'
-		'lr-beetle-psx'
 	)
+
+#	case $BOARD in
+#		"orangepi4"|"RockPro 64"|"Firefly RK3399"|"NanoPC T4"|"NanoPi M4V2"|"NanoPi M4"|"NanoPi Neo 4"|"Orange Pi RK3399"|"Pinebook Pro"|"Rockpi 4A"|"Rockpi 4B" )
+#			tar -xhzvf /tmp/overlay/rk3399/mali.tar.gz -C /
+#			platform = "rk3399"
+#			modules += (
+#				'lr-flycast'
+#				'reicast')
+#			;;
+#	esac
 
 	case $BOARDFAMILY in
 		"rk3399" )
 			tar -xhzvf /tmp/overlay/rk3399/mali.tar.gz -C /
 			platform = "rk3399"
-			;;
-		"armv7-mali" )
-			tar -xhzvf /tmp/overlay/h3/mali.tar.gz -C /
-			platform = "sun8i"
+#			modules += (
+#				'lr-flycast'
+#				'reicast')
 			;;
 	esac
 
