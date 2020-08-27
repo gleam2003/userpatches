@@ -47,23 +47,14 @@ Main() {
 	    'xpad'
 	)
 
-#	case $BOARD in
-#		"orangepi4"|"RockPro 64"|"Firefly RK3399"|"NanoPC T4"|"NanoPi M4V2"|"NanoPi M4"|"NanoPi Neo 4"|"Orange Pi RK3399"|"Pinebook Pro"|"Rockpi 4A"|"Rockpi 4B" )
-#			tar -xhzvf /tmp/overlay/rk3399/mali.tar.gz -C /
-#			platform = "rk3399"
-#			modules += (
-#				'lr-flycast'
-#				'reicast')
-#			;;
-#	esac
-
 	case $BOARDFAMILY in
 		"rk3399" )
 			tar -xhzvf /tmp/overlay/rk3399/mali.tar.gz -C /
 			platform = "rk3399"
-#			modules += (
-#				'lr-flycast'
-#				'reicast')
+			;;
+		"sun8i" )
+			tar -xhzvf /tmp/overlay/rk3399/mali.tar.gz -C /
+			platform = "armv7-mali"
 			;;
 	esac
 
