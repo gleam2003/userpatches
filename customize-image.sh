@@ -48,7 +48,7 @@ Main() {
 	)
 
 	case $BOARDFAMILY in
-		"rk3399" )
+		"rk3399"|"rockchip64" )
 			tar -xhzvf /tmp/overlay/rk3399/mali.tar.gz -C /
 			platform = "rk3399"
 			;;
