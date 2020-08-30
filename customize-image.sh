@@ -49,7 +49,7 @@ Main() {
 			platform = "rk3399"
 			;;
 		"sun8i" )
-			tar -xhzvf /tmp/overlay/rk3399/mali.tar.gz -C /
+			tar -xhzvf /tmp/overlay/sun8i/mali.tar.gz -C /
 			platform = "armv7-mali"
 			;;
 	esac
