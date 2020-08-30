@@ -36,15 +36,11 @@ Main() {
 	cp -r /tmp/overlay/etc/ /
 
 	modules=(
-	    'retroarch'
-	    'emulationstation'
-	    'retropiemenu'
-	    'runcommand'
+		'setup basic_install'
 	    'autostart enable'
 	    'usbromservice'
 	    'samba depends'
 	    'samba install_shares'
-	    'xpad'
 	)
 
 	case $BOARDFAMILY in
