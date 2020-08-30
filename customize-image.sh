@@ -57,7 +57,7 @@ Main() {
 	git clone https://github.com/gleam2003/RetroPie-Setup /home/pi/RetroPie-Setup
 
 	for module in "${modules[@]}"; do
-	    su -c "sudo -S __platform=${BOARDFAMILY} __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh ${module}" - pi
+	    su -c "sudo -S __platform=${platform} __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh ${module}" - pi
 	done
 
 	rm -rf /home/pi/RetroPie-Setup/tmp
