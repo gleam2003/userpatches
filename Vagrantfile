@@ -20,7 +20,7 @@ Vagrant.configure(2) do |config|
 
     # Default images are not big enough to build Armbian.
     config.vagrant.plugins = "vagrant-disksize"
-    config.disksize.size = "40GB"
+    config.disksize.size = "80GB"
 
     # provisioning: install dependencies, download the repository copy
     config.vm.provision "shell", inline: $provisioning_script
